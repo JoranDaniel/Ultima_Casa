@@ -30,7 +30,7 @@
                
                Het Ultima Casa team.",
                         "From: noreply@uc.nl"))
-          {    $result = 'De gegevens zijn naar uw e-mail adres verstuurd.';
+          {    $result = 'De gegkevens zijn naar uw e-mail adres verstuurd.';
           }
           else
           {    $result = 'Fout bij het versturen van de e-mail met uw gegevens.';
