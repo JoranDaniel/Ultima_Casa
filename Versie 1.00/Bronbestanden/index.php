@@ -18,7 +18,7 @@ echo '
      <body>
           <div class="container">
                <div class="col-sm-4 col-md-6 col-lg-4 col-sm-offset-4 col-md-offset-3 col-lg-offset-4">
-                    <h3>Inloggen bij Ultima Casa</h3>' . 
+                    <h3>Inloggen bijddd Ultima Casa</h3>' . 
                     $noaccount . 
                    '<form action="inloggen.php" method="GET">
                          <div class="form-group">
