@@ -1,72 +1,85 @@
 <?php
-     include_once("functions.php");
+include_once("functions.php");
+
+$relatieid = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : (isset($_GET['RID']) ? filter_var($_GET['RID'], FILTER_VALIDATE_INT) : null);
+
+$filtered = 0;
+$filter = "relaties.ID = " . $relatieid . " AND (StatusCode < 100)";
+$datum = "";
+$bod = "";
+$zoek = "";
+
+$params = array(); // Initialize $params array
+
+if (isset($_GET['Datum']) && !empty($_GET['Datum'])) {
+    $datum = $_GET['Datum'];
+    $filtered = 1;
+}
+if (isset($_GET['Bod']) && !empty($_GET['Bod'])) {
+    $bod = $_GET['Bod'];
+    $filtered = 1;
+}
+if (isset($_GET['Zoek']) && !empty($_GET['Zoek'])) {
+    $zoek = $_GET['Zoek'];
+    $filtered = 1;
+}
+
+if (!empty($datum)) {
+    $filter .= " AND StartDatum > :datum";
+    $params[':datum'] = $datum;
+}
+
+if (!empty($bod)) {
+    $filter .= " AND Bod > :bod";
+    $params[':bod'] = $bod;
+}
+
+if (!empty($zoek)) {
+    $filter .= " AND CONCAT_WS('', StartDatum, Datum, Bod, Status, Straat, Postcode, Plaats) LIKE :zoek";
+    $params[':zoek'] = '%' . $zoek . '%';
+}
+
+$db = ConnectDB();
+
+$sql = "SELECT biedingen.ID as TKID,
+               StartDatum,
+               IF(Bod, Datum, '&nbsp;') AS Datum,
+               CONCAT('&euro; ', Bod) AS Bod,
+               Straat,
+               CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
+               Status, 
+               biedingen.FKhuizenID AS HID,
+               huizen.FKRelatiesID as RID
+          FROM biedingen
+     LEFT JOIN relaties ON relaties.ID = biedingen.FKRelatiesID 
+     LEFT JOIN huizen ON huizen.ID = biedingen.FKhuizenID
+     LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
+         WHERE " . $filter . "
+     ORDER BY Datum";
+
+$kopen = $db->prepare($sql);
+$kopen->execute($params);
+$kopen = $kopen->fetchAll();
      
-     $relatieid = $_GET['RID'];
-     
-     $filtered = 0;
-     $filter = "relaties.ID = " . $relatieid . " AND (StatusCode < 100)";
-     $datum = "";
-     $bod = "";
-     $zoek = "";
-     if (isset($_GET['Datum']) && !empty($_GET['Datum']))
-     {    $datum = $_GET['Datum'];
-          $filtered = 1;
-     };
-     if (isset($_GET['Bod']) && !empty($_GET['Bod']))
-     {    $bod = $_GET['Bod'];
-          $filtered = 1;
-     };
-     if (isset($_GET['Zoek']) && !empty($_GET['Zoek']))
-     {    $zoek = $_GET['Zoek'];
-          $filtered = 1;
-     };
-     
-     if (!empty($datum))
-     {    $filter .= " AND StartDatum > '" . $datum . "'";
-     };
-     
-     if (!empty($bod))
-     {    $filter .= " AND Bod > " . $bod;
-     };
-     
-     if (!empty($zoek))
-     {    $filter .= " AND CONCAT_WS('', StartDatum, Datum, Bod, Status, Straat, Postcode, Plaats) LIKE '%" . $zoek . "%'";
-     };
-     
-     $db = ConnectDB();
-     
-     $sql = "   SELECT biedingen.ID as TKID,
-                       StartDatum,
-                       IF(Bod, Datum, '&nbsp;') AS Datum,
-                       CONCAT('&euro; ', Bod) AS Bod,
-                       Straat,
-                       CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
-                       Status, 
-                       biedingen.FKhuizenID AS HID,
-                       huizen.FKRelatiesID as RID
-                  FROM biedingen
-             LEFT JOIN relaties ON relaties.ID = biedingen.FKRelatiesID 
-             LEFT JOIN huizen on huizen.ID = biedingen.FKhuizenID
-             LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
-                 WHERE " . $filter . "
-             ORDER BY Datum";
-             
-     $kopen = $db->query($sql)->fetchAll();
-     
-     $sql = "   SELECT huizen.ID as HID,
-                       StartDatum,
-                       Straat,
-                       CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
-                       Status,
-                       CONCAT('&euro; ', Max(Bod)) AS HoogsteBod,
-                       Status
-                  FROM huizen
-             LEFT JOIN relaties ON relaties.ID = huizen.FKRelatiesID 
-             LEFT JOIN biedingen ON biedingen.FKhuizenID = huizen.ID
-             LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
-             WHERE relaties.ID = $relatieid
-             GROUP BY huizen.ID
-             ORDER BY StartDatum";
+$sql = "SELECT huizen.ID as HID,
+          StartDatum,
+          Straat,
+          CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
+          Status,
+          CONCAT('&euro; ', Max(Bod)) AS HoogsteBod,
+          Status
+          FROM huizen
+          LEFT JOIN relaties ON relaties.ID = huizen.FKRelatiesID 
+          LEFT JOIN biedingen ON biedingen.FKhuizenID = huizen.ID
+          LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
+          WHERE relaties.ID = :relatieid
+          GROUP BY huizen.ID
+          ORDER BY StartDatum";
+
+$kopen = $db->prepare($sql);
+$kopen->bindParam(':relatieid', $relatieid, PDO::PARAM_INT);
+$kopen->execute();
+$kopen = $kopen->fetchAll();
              
      $verkopen = $db->query($sql)->fetchAll();
      
