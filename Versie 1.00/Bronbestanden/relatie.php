@@ -1,6 +1,6 @@
 <?php
      include_once("functions.php");
-     
+     error_reporting(0);
      $relatieid = $_GET['RID'];
      
      $filtered = 0;

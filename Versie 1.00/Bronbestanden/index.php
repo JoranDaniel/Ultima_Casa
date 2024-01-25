@@ -1,4 +1,9 @@
 <?php
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
      $noaccount = "";
      if (isset($_GET["NOAccount"]))
      {    $noaccount = "<h4 class='accent'><br>Onjuiste E-mail/Wachtwoord combinatie.<br><br></h4>";
@@ -18,7 +23,11 @@ echo '
      <body>
           <div class="container">
                <div class="col-sm-4 col-md-6 col-lg-4 col-sm-offset-4 col-md-offset-3 col-lg-offset-4">
+<<<<<<< Updated upstream
                     <h3>Inloggen bijddd Ultima Casa</h3>' . 
+=======
+                    <h3>Inloggen bij Ultima Casa</h3>' . 
+>>>>>>> Stashed changes
                     $noaccount . 
                    '<form action="inloggen.php" method="GET">
                          <div class="form-group">

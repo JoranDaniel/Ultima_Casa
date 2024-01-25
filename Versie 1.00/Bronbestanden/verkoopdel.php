@@ -3,7 +3,12 @@
      include_once("functions.php");
      
      $db = ConnectDB();
-     
+          // Check if the user is logged in
+if (!isset($_SESSION['RID'])) {
+     // Redirect to the login page if not logged in
+     header("Location: unauthorized.php");
+     exit();
+ }
      $huizenID = $_GET["wis"]; 
      $relatiesID = $_GET["RID"]; 
      $adressenID = $_GET["AID"]; 

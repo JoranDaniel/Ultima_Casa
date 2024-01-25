@@ -1,7 +1,11 @@
 <?php
 
      include_once("functions.php");
-     
+     if (!isset($_SESSION['RID'])) {
+          // Redirect to the login page if not logged in
+          header("Location: unauthorized.php");
+          exit();
+      }
      $db = ConnectDB();
      
      $ID = $_GET["ID"]; 

@@ -1,7 +1,12 @@
 <?php
 
      include_once("functions.php");
-     
+          // Check if the user is logged in
+if (!isset($_SESSION['RID'])) {
+     // Redirect to the login page if not logged in
+     header("Location: unauthorized.php");
+     exit();
+ }
      $db = ConnectDB();
      
      $fromid = $_GET["FID"];

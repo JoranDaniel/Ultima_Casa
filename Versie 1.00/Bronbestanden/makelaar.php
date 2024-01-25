@@ -1,4 +1,5 @@
 <?php
+session_start();
 
      include_once("functions.php");
      
@@ -14,7 +15,15 @@
                  WHERE ID = " . $relatieid;
      
      $gegevens = $db->query($sql)->fetch();
+     // Check if the logged-in user has the required permission (ID 529 for admin access)
+if ($_SESSION['RID'] != 529) {
      
+    // Redirect to an unauthorized page if the user does not have permission
+    header("Location: unauthorized.php");
+    exit();
+}
+
+
      echo 
     '<!DOCTYPE html>
      <html lang="nl">
