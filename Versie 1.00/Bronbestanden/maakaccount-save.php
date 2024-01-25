@@ -13,21 +13,21 @@ if (!isset($_SESSION['RID'])) {
      $telefoon = $_GET['Telefoon'];
      $wachtwoord = $_GET['Wachtwoord'];
      
-<<<<<<< Updated upstream
+
      $sql = "INSERT INTO relaties (Naam, Email, Telefoon, Wachtwoord)
                   VALUES ('" . $naam . "', '" . 
                                $email . "', '" .
                                $telefoon . "', '" . 
                                md5($wachtwoord) . "')";
-=======
+
+
      $sql = "INSERT INTO relaties (Naam, Email, Telefoon, Wachtwoord, FKrollenID)
-                  VALUES ('" . $naam . "', '" . 
-                               $email . "', '" .
-                               $telefoon . "', '" . 
-                               md5($wachtwoord) . "', '" . 
-                               10 . "')";
-     
->>>>>>> Stashed changes
+     VALUES ('" . $naam . "', '" . 
+                  $email . "', '" .
+                  $telefoon . "', '" . 
+                  md5($wachtwoord) . "', '" . 
+                  10 . "')";
+
      
      if ($db->query($sql) == true) 
      {    if (StuurMail($email, 
