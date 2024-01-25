@@ -16,12 +16,24 @@ session_start();
      
      $gegevens = $db->query($sql)->fetch();
      // Check if the logged-in user has the required permission (ID 529 for admin access)
-if ($_SESSION['RID'] != 529) {
+     if ($_SESSION['RID'] != 532) {
+
+
+          // Redirect to an unauthorized page if the user does not have permission
+          header("Location: unauthorized.php");
+          exit();
+      }
+
+
      
     // Redirect to an unauthorized page if the user does not have permission
-    header("Location: unauthorized.php");
-    exit();
-}
+
+    if (!isset($_SESSION['RID'])) {
+        // Redirect to the login page if not logged in
+        header("Location: unauthorized.php");
+        exit();
+    }
+    
 
 
      echo 
