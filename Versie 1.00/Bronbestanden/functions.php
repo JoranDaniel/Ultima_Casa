@@ -73,6 +73,7 @@ function InlogKop($relatieid, $titel, $extracel = "")
               WHERE relaties.ID = " . $relatieid;
      
      $ingelogals = $db->query($sql)->fetch();
+
  
      return 
          '<table id="inlog_gegevens">
@@ -83,10 +84,14 @@ function InlogKop($relatieid, $titel, $extracel = "")
                             $ingelogals["Email"] . '<br>' . 
                             $ingelogals["Telefoon"] .
                    '</td>
-                    <td>                                                                             
+                    <td>    
+                                                                                        
                          <button class="action-button button-column">
                               <a href="index.php">Uitloggen</a>
+                              
+
                          </button>
+
                     </td>' .
                     $extracel .
               '</tr>

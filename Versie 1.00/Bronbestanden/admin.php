@@ -4,14 +4,20 @@ session_start();
 include_once("functions.php");
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
+
+if (!isset($_SESSION['RID'])) {
     // Redirect to the login page if not logged in
-    header("Location: login.php");
+    header("Location: unauthorized.php");
+
+
     exit();
 }
 
 // Check if the logged-in user has the required permission (ID 529 for admin access)
-if ($_SESSION['user_id'] != 529) {
+
+if ($_SESSION['RID'] != 529) {
+
+
     // Redirect to an unauthorized page if the user does not have permission
     header("Location: unauthorized.php");
     exit();
@@ -23,7 +29,8 @@ $db = ConnectDB();
 $allowed_ids = array(529);
 $relatieid = $_GET['RID'];
 
-// Query the database to check if the user ID exists
+
+
 $sql_check_id = "SELECT COUNT(*) FROM relaties WHERE ID = " . $relatieid;
 $count = $db->query($sql_check_id)->fetchColumn();
 
@@ -63,7 +70,10 @@ echo
                           <td>' . $gegevens["Naam"] . '<br>' . $gegevens["Email"] . '<br>' . $gegevens["Telefoon"] . '</td>
                           <td>
                                <button class="action-button">
-                                    <a href="index.html">Uitloggen</a>
+
+                                    <a href="index.php">Uitloggen</a>
+                                   
+
                                </button>
                           </td>
                      </tr>
@@ -95,4 +105,13 @@ echo
            </div>
       </body>
  </html>';
+
+
+if ($relatieid != 529) {
+     // Redirect to makelaar.php if RID is not 529
+     header("Location: makelaar.php");
+     exit();
+}
+
 ?>
+

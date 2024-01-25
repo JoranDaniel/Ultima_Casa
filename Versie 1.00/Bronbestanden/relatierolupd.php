@@ -6,7 +6,12 @@
      $relatieID = $_GET["RID"]; 
      $ID = $_GET["upd"]; 
      $rolID = $_GET["Rol"]; 
-     
+          // Check if the user is logged in
+if (!isset($_SESSION['RID'])) {
+     // Redirect to the login page if not logged in
+     header("Location: unauthorized.php");
+     exit();
+ }
      echo 
     '<!DOCTYPE html>
      <html lang="nl">
