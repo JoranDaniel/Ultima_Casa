@@ -3,11 +3,7 @@
 
      $db = ConnectDB();
           // Check if the user is logged in
-if (!isset($_SESSION['RID'])) {
-     // Redirect to the login page if not logged in
-     header("Location: unauthorized.php");
-     exit();
- }
+
      $naam = $_GET['Naam'];
      $email = $_GET['Email'];
      $telefoon = $_GET['Telefoon'];
